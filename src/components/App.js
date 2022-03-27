@@ -65,6 +65,21 @@ class App extends Component {
     this.setState({ cardArray: CARD_ARRAY.sort(() => 0.5 - Math.random()) })
   }
 
+  async shouldComponentUpdate(){
+    const web3 = window.web3
+    const networkId = await web3.eth.net.getId()
+    if(networkId !== '0x4'){
+      this.defaultNetwork()
+      
+      window.ethereum.on("chainChanged", (chainId) => {
+        // Handle the new chain.
+        // Correctly handling chain changes can be complicated.
+        // We recommend reloading the page unless you have good reason not to.
+        window.location.reload();
+      });
+    }
+  }
+
   async loadWeb3() {
     if (window.ethereum) {
       window.web3 = new Web3(window.ethereum)
@@ -74,7 +89,19 @@ class App extends Component {
       window.web3 = new Web3(window.web3.currentProvider)
     }
     else {
-      window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!')
+      console.log('Non-Ethereum browser detected. You should consider trying MetaMask!')
+    }
+  }
+
+  defaultNetwork = async () => {
+    try {
+      // check if the chain to connect to is installed
+      await window.ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: '0x4' }], // chainId must be in hexadecimal numbers
+      })
+    } catch (error) {
+      console.error(error);
     }
   }
 
@@ -104,7 +131,7 @@ class App extends Component {
         })
       }
     } else {
-      alert('Smart contract not deployed to detected network.')
+      console.log('Smart contract not deployed to detected network.')
     }
   }
 
@@ -150,6 +177,7 @@ class App extends Component {
       console.error(error)
       }
   }
+
 
   render() {
     return (
