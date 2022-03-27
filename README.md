@@ -1,5 +1,7 @@
 # 🚀 Quick Start
 
+### Check out [THIS](https://github.com/menezesphill/eggnator) repo for more details on how to create and publish an ERC721 token like the one used for this example.
+
 ✅ Clone or fork `eggnator_dapp`:
 
 ```sh
